@@ -5,19 +5,14 @@ using UnityEngine;
 public class PointBManager : MonoBehaviour
 {
     [SerializeField] private List<Transform> _wayPoints = new List<Transform>();
+    GameObject pointA;
     GameObject newObject;
-    Rigidbody rb;
-    // Start is called before the first frame update
+
     void Start()
     {
-        
+        pointA = GameObject.Find("Point A");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void OnMouseDown()
     {
         StartCoroutine(SpawnCubes());
@@ -26,10 +21,13 @@ public class PointBManager : MonoBehaviour
     private IEnumerator SpawnCubes()
     {
         newObject = Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
-        foreach(Transform _wayPoint in _wayPoints)
+        float u = 0f;
+        while(u<=1f)
         {
-            yield return new WaitForSeconds(2);
-           rb =  newObject.GetComponent<Rigidbody>();
+            newObject.transform.position = Vector3.Lerp(gameObject.transform.position, pointA.transform.position, u);
+            u += Time.deltaTime * 0.12f;
+            yield return null;
         }
+        Destroy(newObject);
     }
 }
